@@ -1,0 +1,95 @@
+import { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { Menu, X, Phone, ShoppingCart } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import logo from "@/assets/logo.png";
+
+const navLinks = [
+  { label: "Home", to: "/" },
+  { label: "Shop", to: "/shop" },
+  { label: "Services", to: "/services" },
+  { label: "About", to: "/about" },
+  { label: "Contact", to: "/contact" },
+  { label: "FAQ", to: "/faq" },
+];
+
+const Header = () => {
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const location = useLocation();
+
+  return (
+    <header className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
+      <div className="container flex h-16 items-center justify-between md:h-20">
+        <Link to="/" className="flex items-center gap-2">
+          <img src={logo} alt="Tuning Factory" className="h-10 md:h-12" />
+        </Link>
+
+        {/* Desktop Nav */}
+        <nav className="hidden items-center gap-1 lg:flex">
+          {navLinks.map((link) => (
+            <Link
+              key={link.to}
+              to={link.to}
+              className={`px-4 py-2 font-heading text-sm font-semibold uppercase tracking-wider transition-colors hover:text-primary ${
+                location.pathname === link.to ? "text-primary" : "text-foreground"
+              }`}
+            >
+              {link.label}
+            </Link>
+          ))}
+        </nav>
+
+        <div className="hidden items-center gap-3 lg:flex">
+          <a href="tel:403-993-6742" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors">
+            <Phone className="h-4 w-4" />
+            403-993-6742
+          </a>
+          <Link to="/book">
+            <Button size="sm" className="bg-primary text-primary-foreground font-heading font-semibold uppercase tracking-wider hover:bg-primary/90 glow-orange">
+              Book Service
+            </Button>
+          </Link>
+          <Link to="/shop" className="relative text-foreground hover:text-primary transition-colors">
+            <ShoppingCart className="h-5 w-5" />
+          </Link>
+        </div>
+
+        {/* Mobile toggle */}
+        <button
+          className="lg:hidden text-foreground"
+          onClick={() => setMobileOpen(!mobileOpen)}
+          aria-label="Toggle menu"
+        >
+          {mobileOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+        </button>
+      </div>
+
+      {/* Mobile Nav */}
+      {mobileOpen && (
+        <div className="border-t border-border bg-background lg:hidden">
+          <nav className="container flex flex-col gap-1 py-4">
+            {navLinks.map((link) => (
+              <Link
+                key={link.to}
+                to={link.to}
+                onClick={() => setMobileOpen(false)}
+                className={`px-4 py-3 font-heading text-sm font-semibold uppercase tracking-wider transition-colors hover:text-primary ${
+                  location.pathname === link.to ? "text-primary" : "text-foreground"
+                }`}
+              >
+                {link.label}
+              </Link>
+            ))}
+            <Link to="/book" onClick={() => setMobileOpen(false)}>
+              <Button className="mt-2 w-full bg-primary text-primary-foreground font-heading font-semibold uppercase tracking-wider">
+                Book Service
+              </Button>
+            </Link>
+          </nav>
+        </div>
+      )}
+    </header>
+  );
+};
+
+export default Header;
